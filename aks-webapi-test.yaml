@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aks-webapi-test
+  labels:
+    app: aks-webapi-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      lbtype: external
+  template:
+    metadata:
+      labels:
+        lbtype: external
+        app: aks-webapi-test
+    spec:
+      containers:
+      - name: aks-webapi-test
+        image: michalorzechowski123/aks-tests:latest
+        tty: true
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+          name: "8080-port"
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: aks-webapi-test
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: aks-webapi-test
+#   template:
+#     metadata:
+#       labels:
+#         app: aks-webapi-test
+#     spec:
+#       nodeSelector:
+#         "kubernetes.io/os": linux
+#       containers:
+#       - name: aks-webapi-test
+#         image: michalorzechowski123/aks-tests:latest
+#         resources:
+#           requests:
+#             cpu: 100m
+#             memory: 128Mi
+#           limits:
+#             cpu: 250m
+#             memory: 256Mi
+#         ports:
+#         - containerPort: 80
+#         name: "5601-port"
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: aks-webapi-test
+# spec:
+#   type: LoadBalancer
+#   ports:
+#   - port: 80
+#   selector:
+#     app: aks-webapi-test
